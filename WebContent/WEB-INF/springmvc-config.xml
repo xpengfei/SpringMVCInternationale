@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd">
+
+	<!-- 以下是使用注解开发时所需要的配置 -->
+	<!-- spring自动扫描base-pack下面的包或者子包下面的Java文件,如果如果扫描到有 spring的相关注解的类,则把这些类注册为Spring的bean -->
+	<!-- 扫描对应的包 -->
+	<context:component-scan base-package="com.xing.controller" />
+
+	<!-- <mvc:annotation-driven /> 会自动注册DefaultAnnotationHandlerMapping与 AnnotationMethodHandlerAdapter 
+		两个bean, 是spring MVC为@Controllers分发请求所必须的。 -->
+	<mvc:annotation-driven />
+
+
+	<!-- 视图解析器 -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<!-- 前缀 -->
+		<property name="prefix">
+			<value>/WEB-INF/content/</value>
+		</property>
+		<!-- 后缀 -->
+		<property name="suffix">
+			<value>.jsp</value>
+		</property>
+	</bean>
+
+	<!-- 国际化 -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<!-- 国际化资源文件名 -->
+		<property name="basename" value="message"></property>
+	</bean>
+
+	<mvc:interceptors>
+		<!-- 国际化操作拦截器,如果采用基于(Session/Cookie)则必须配置 -->
+		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" />
+
+	</mvc:interceptors>
+	<!-- AcceptHeaderLocaleResolver配置,因为AcceptHeaderLocaleResolver是默认语言区域解析器,不配置也可以 -->
+<!-- 	<bean id="localeResolver"
+		class="org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver" />
+	 -->
+	 <!-- SessionLocaleResolver配置,实现国际化 -->
+	<!-- <bean id="localeResolver" 
+		class="org.springframework.web.servlet.i18n.SessionLocaleResolver"/>
+ -->
+ 	<!--  CookieLocaleResolver语言区域解析器实现国际化-->
+ 	<bean id="localeResolver" 
+ 			class="org.springframework.web.servlet.i18n.CookieLocaleResolver"/>
+
+</beans>
